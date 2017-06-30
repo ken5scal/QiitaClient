@@ -32,9 +32,6 @@ class MainActivity : AppCompatActivity() {
         val searchButton = findViewById(R.id.search_button) as Button
 
         val listAdapter = ArticleListAdapter(applicationContext)
-//        listAdapter.articles = listOf(
-//                dummyArticle("Kotlin", "Kengo"),
-//                dummyArticle("Kotlin", "Kengo"))
         listView.adapter = listAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
             val article = listAdapter.articles[position]
@@ -69,16 +66,5 @@ class MainActivity : AppCompatActivity() {
                         toast("Error: $it")
                     })
         }
-
-//        searchButton.setOnClickListener {
-//            articleClient.search(queryEditText.text.toString())
-//        }
     }
-
-    private fun dummyArticle(title: String, userName: String): Article =
-            Article(id = "",
-                    title = title,
-                    url = "https://kotlinlang.org/",
-                    user = User(id = "", name = userName, profileImageUrl = ""))
-
 }

@@ -8,22 +8,20 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import sample.qiitaclient.client.ArticleClient
-import sample.qiitaclient.model.Article
-import sample.qiitaclient.model.User
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var articleClient: ArticleClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as QiitaClientApp).component.inject(this)
         setContentView(R.layout.activity_main)
 
         val listView: ListView = findViewById(R.id.list_view) as ListView
@@ -37,16 +35,6 @@ class MainActivity : AppCompatActivity() {
             val article = listAdapter.articles[position]
             ArticleActivity.intent(this, article).let { startActivity(it) }
         }
-
-        val gson = GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://qiita.com")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-        val articleClient = retrofit.create(ArticleClient::class.java)
 
         searchButton.setOnClickListener {
             progressBar.visibility = View.VISIBLE

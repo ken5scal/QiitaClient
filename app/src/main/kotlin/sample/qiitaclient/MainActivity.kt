@@ -21,12 +21,12 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-//    @Inject
-//    lateinit articleClient: ArticleClient
+    @Inject
+    lateinit var articleClient: ArticleClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        (application as QiitaClientApp).component.inject(this)
+        (application as QiitaClientApp).component.inject(this)
         setContentView(R.layout.activity_main)
 
         val listView: ListView = findViewById(R.id.list_view) as ListView
@@ -40,16 +40,6 @@ class MainActivity : AppCompatActivity() {
             val article = listAdapter.articles[position]
             ArticleActivity.intent(this, article).let { startActivity(it) }
         }
-
-        val gson = GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://qiita.com")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-        val articleClient = retrofit.create(ArticleClient::class.java)
 
         searchButton.setOnClickListener {
             progressBar.visibility = View.VISIBLE
